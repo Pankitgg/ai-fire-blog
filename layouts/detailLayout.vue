@@ -23,7 +23,7 @@ import DetailFooter from '@/components/layout/detailFooter.vue'
 <style lang="less" scoped>
 .content-containter {
   padding-top: 60px;
-  max-width: 1366px;
+  // max-width: 1366px;
   height: calc(100% - 60px);
   min-height: calc(100vh - 70px);
   margin: auto;

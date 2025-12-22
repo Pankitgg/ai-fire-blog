@@ -27,7 +27,7 @@
         <i
           class="iconfont"
           :class="item.font"
-          :style="{ color: item.color || '#1bc47d' }"
+          :style="{ color: item.id === props.activeType ? '#fff' : (item.color || 'var(--primary-color)') }"
         ></i>
         {{ item.name }}
       </div>
@@ -65,84 +65,98 @@ const checkType = (id: number) => {
 </script>
 
 <style lang="less" scoped>
+.blog-types {
+  width: 100%;
+  position: relative;
+  background: var(--bg-color); /* Match body bg */
+  padding: 16px 0;
+  margin-bottom: 24px;
+  
+  /* Buttons */
+  .prev-btn, .next-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 32px;
+    height: 32px;
+    background: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: all 0.3s;
+    color: var(--text-secondary);
+    
+    &:hover {
+      background: var(--primary-color);
+      color: #fff;
+    }
+  }
+  
+  .prev-btn { left: 0; }
+  .next-btn { right: 0; }
+}
+
 #tab {
   display: flex;
-  overflow: auto;
-  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  height: 60px; /* increased height */
   align-items: center;
-  padding-top: 6px;
-}
-.blog-types {
-  overflow: hidden;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  height: 72px;
-  background: #fff;
-  border-bottom: 1px solid #ececec;
-  padding: 0 40px;
-  position: relative;
+  padding: 0 40px; /* Space for buttons */
+  gap: 12px;
+  
+  /* Hide scrollbar */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  
   .item {
     white-space: nowrap;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
-    color: #21293c;
-    padding: 10px 20px;
-    height: 48px;
-    border-radius: 90px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    padding: 8px 20px;
+    height: 40px;
+    border-radius: 9999px; /* Pill shape */
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.3s ease;
+    background: #fff;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    flex-shrink: 0;
+    
+    .iconfont {
+      margin-right: 8px;
+      font-size: 18px;
+      transition: color 0.3s;
+    }
+    
     &:hover {
-      background: rgba(75, 88, 124, 0.08);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary-color);
+      color: var(--primary-color);
     }
+    
     &.active {
-      background: rgba(75, 88, 124, 0.08);
+      background: var(--primary-color);
+      color: #fff;
+      border-color: var(--primary-color);
+      box-shadow: var(--shadow-md);
+      
+      .iconfont {
+        color: #fff !important; /* Force white icon when active */
+      }
     }
-    .iconfont {
-      font-size: 30px;
-      color: #1bc47d;
-      margin-right: 12px;
-    }
-  }
-  .prev-btn,
-  .next-btn {
-    width: 40px;
-    height: 70px;
-    display: flex;
-    align-items: center;
-    position: absolute;
-    justify-content: center;
-    cursor: pointer;
-    .iconfont {
-      color: #21293c;
-      font-size: 30px;
-      width: 32px;
-      height: 32px;
-      line-height: 32px;
-      border-radius: 50%;
-      text-align: center;
-    }
-    .iconfont:hover {
-      background: #4b587c14;
-    }
-  }
-  .next-btn {
-    background: linear-gradient(
-      271.39deg,
-      #ffffff 62.1%,
-      rgba(255, 255, 255, 0) 98.81%
-    );
-    right: 0;
-  }
-  .prev-btn {
-    background: linear-gradient(
-      91.39deg,
-      #ffffff 62.1%,
-      rgba(255, 255, 255, 0) 98.81%
-    );
-    left: 0;
   }
 }
 </style>

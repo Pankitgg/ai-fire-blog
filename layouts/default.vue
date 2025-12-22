@@ -10,7 +10,7 @@
   <div class="content-containter">
     <LeftMenu />
     <NuxtPage class="content-body" />
-    <Footer />
+    <!-- <Footer /> -->
   </div>
 </template>
 
@@ -22,7 +22,7 @@ import Footer from '@/components/layout/Footer.vue'
 
 <style lang="less" scoped>
 .content-containter {
-  max-width: 1366px;
+  // max-width: 1366px;
   height: calc(100% - 60px);
   min-height: calc(100vh - 70px);
   margin: auto;

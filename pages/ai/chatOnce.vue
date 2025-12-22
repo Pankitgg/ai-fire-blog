@@ -45,7 +45,7 @@
             第一次握手
           </button>
           <button 
-            v-for="(button, index) in quickButtons" 
+            v-for="(button, index) in quickButtons"
             :key="index"
             class="quick-question-button"
             @click="fillQuestion(button.message)"
@@ -225,14 +225,18 @@ const validateAndSubmit = () => {
 
 <style lang="less" scoped>
 .ai-chat-once-container {
-  /* 固定大小 */
-  width: 480px;
-  height: 400px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 900px;
+  height: 650px;
+  background: var(--card-bg);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
   overflow: hidden;
   position: relative;
+  border: 1px solid var(--border-color);
+  margin: 40px auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .mode-container {
@@ -242,43 +246,6 @@ const validateAndSubmit = () => {
   flex-direction: column;
   padding: 24px;
   position: relative;
-}
-
-/* 头像区域 */
-.avatar-section {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.ai-avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #52c41a 0%, #389e0d 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 16px;
-  box-shadow: 0 2px 8px rgba(82, 196, 26, 0.3);
-  
-  .iconfont {
-    color: #fff;
-    font-size: 24px;
-  }
-}
-
-.avatar-info h3 {
-  font-size: 18px;
-  font-weight: 600;
-  color: #333;
-  margin: 0 0 4px 0;
-}
-
-.avatar-info p {
-  font-size: 14px;
-  color: #666;
-  margin: 0;
 }
 
 /* 输入区域 */
@@ -292,24 +259,25 @@ const validateAndSubmit = () => {
       width: 100%;
       min-height: 120px; /* 设置最小高度 */
       padding: 16px;
-      border: 2px solid #f0f0f0;
-      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
       resize: none;
       font-size: 14px;
       line-height: 1.6;
       outline: none;
       transition: all 0.3s;
       font-family: inherit;
-      color: #333; /* 明确设置文本颜色 */
-      background: white; /* 明确设置背景颜色 */
+      color: var(--text-main);
+      background: var(--bg-color);
       
       &:focus {
-        border-color: #52c41a;
-        box-shadow: 0 0 0 3px rgba(82, 196, 26, 0.1);
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        background: var(--card-bg);
       }
       
       &::placeholder {
-        color: #999;
+        color: var(--text-secondary);
       }
     }
     
@@ -318,7 +286,7 @@ const validateAndSubmit = () => {
       bottom: 40px; /* 调整字符计数位置，为按钮腾出空间 */
       right: 16px;
       font-size: 12px;
-      color: #999;
+      color: var(--text-secondary);
       background: rgba(255, 255, 255, 0.9);
       padding: 2px 6px;
       border-radius: 10px;
@@ -335,12 +303,12 @@ const validateAndSubmit = () => {
   }
   
   .quick-question-button {
-      padding: 6px 12px; /* 减小按钮大小 */
-      border: 1px solid #52c41a; /* 科技绿色边框 */
-      border-radius: 16px; /* 减小圆角 */
-      background: #f6ffed; /* 科技绿色背景 */
-      color: #52c41a; /* 科技绿色文字 */
-      font-size: 12px; /* 减小字体大小 */
+      padding: 6px 12px;
+      border: 1px solid var(--primary-color);
+      border-radius: 16px;
+      background: rgba(16, 185, 129, 0.05);
+      color: var(--primary-color);
+      font-size: 12px;
       cursor: pointer;
       transition: all 0.3s;
       white-space: nowrap;
@@ -349,39 +317,24 @@ const validateAndSubmit = () => {
       
       /* 第一次握手按钮特殊样式 */
       &.first-handshake-button {
-        border: 1px solid #ff7a45; /* 橘黄色边框 */
-        background: #fff7e6; /* 橘黄色背景 */
-        color: #ff7a45; /* 橘黄色文字 */
+        border: 1px solid var(--secondary-color);
+        background: rgba(139, 92, 246, 0.05);
+        color: var(--secondary-color);
         
         &:hover {
-          background: linear-gradient(135deg, #ff7a45, #ffac38); /* 橘黄色渐变 */
-          border-color: #ff7a45;
+          background: var(--secondary-color);
+          border-color: var(--secondary-color);
           color: #fff;
-          box-shadow: 0 2px 8px rgba(255, 122, 69, 0.3);
+          box-shadow: var(--shadow-sm);
         }
       }
     
     &:hover {
-      background: linear-gradient(135deg, #52c41a, #73d13d); /* 科技绿色渐变 */
+      background: var(--primary-color);
       color: #fff;
-      border-color: #52c41a;
-      transform: translateY(-1px); /* 减小上移距离 */
-      box-shadow: 0 2px 8px rgba(82, 196, 26, 0.3);
-    }
-    
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-      transition: left 0.5s;
-    }
-    
-    &:hover::after {
-      left: 100%;
+      border-color: var(--primary-color);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
     }
   }
 
@@ -396,12 +349,11 @@ const validateAndSubmit = () => {
   }
   
   &::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 2px;
+    background: transparent;
   }
   
   &::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
+    background: #E5E7EB;
     border-radius: 2px;
   }
 }
@@ -415,47 +367,40 @@ const validateAndSubmit = () => {
 .answer-label {
   font-size: 14px;
   font-weight: 500;
-  color: #666;
+  color: var(--text-secondary);
   margin-bottom: 8px;
 }
 
 .question-content {
-  background: #f7f7f7;
+  background: var(--bg-color);
   padding: 12px 16px;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   font-size: 14px;
   line-height: 1.6;
-  color: #333;
+  color: var(--text-main);
 }
 
 .answer-content {
-  background: #f6ffed;
+  background: rgba(16, 185, 129, 0.05);
   padding: 16px;
-  border-radius: 8px;
-  border: 1px solid #b7eb8f;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(16, 185, 129, 0.2);
   min-height: 80px;
   position: relative;
 }
 
-.streaming-content {
-  font-size: 14px;
-  line-height: 1.6;
-  color: #333 !important;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-
+.streaming-content,
 .completed-content {
   font-size: 14px;
   line-height: 1.6;
-  color: #333 !important;
+  color: var(--text-main) !important;
   white-space: pre-wrap;
   word-break: break-word;
 }
 
 .cursor {
   animation: blink 1s infinite;
-  color: #52c41a;
+  color: var(--primary-color);
   font-weight: bold;
 }
 
@@ -483,21 +428,22 @@ const validateAndSubmit = () => {
   justify-content: center;
   font-size: 20px;
   transition: all 0.3s;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-md);
 }
 
 .send-button {
-  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+  background: var(--primary-color);
   color: #fff;
   
   &:hover:not(:disabled) {
+    background: var(--primary-hover);
     transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(24, 144, 255, 0.4);
+    box-shadow: var(--shadow-lg);
   }
   
   &:disabled {
-    background: #f5f5f5;
-    color: #d9d9d9;
+    background: var(--bg-color);
+    color: var(--text-secondary);
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
@@ -505,24 +451,22 @@ const validateAndSubmit = () => {
 }
 
 .back-button {
-  background: linear-gradient(135deg, #faad14 0%, #d48806 100%);
+  background: var(--secondary-color);
   color: #fff;
   
   &:hover {
     transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(250, 173, 20, 0.4);
+    box-shadow: var(--shadow-lg);
   }
 }
 
 /* 确保按钮图标正确显示 */
 .icon-send::before {
-  content: "→";
-  font-size: 20px;
+  content: "\e61a"; /* iconfont send icon code if known, or use arrow */
 }
 
 .icon-back::before {
-  content: "←";
-  font-size: 20px;
+  content: "\e624";
 }
 
 /* 响应式设计 */
@@ -531,8 +475,8 @@ const validateAndSubmit = () => {
     width: 100%;
     max-width: 100%;
     height: 360px;
-    border-radius: 8px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
     margin: 0;
   }
   
@@ -639,6 +583,7 @@ const validateAndSubmit = () => {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -646,12 +591,12 @@ const validateAndSubmit = () => {
 }
 
 .handshake-dialog {
-  background: white;
-  border-radius: 12px;
+  background: var(--card-bg);
+  border-radius: var(--radius-xl);
   padding: 24px;
   width: 90%;
   max-width: 400px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-lg);
   animation: dialogFadeIn 0.3s ease-out;
 }
 
@@ -669,14 +614,14 @@ const validateAndSubmit = () => {
 .handshake-dialog h3 {
   margin: 0 0 8px 0;
   font-size: 18px;
-  color: #333;
+  color: var(--text-main);
   font-weight: 600;
 }
 
 .dialog-description {
   margin: 0 0 20px 0;
   font-size: 14px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .input-wrapper {
@@ -686,21 +631,24 @@ const validateAndSubmit = () => {
 .input-wrapper input {
   width: 100%;
   padding: 12px 16px;
-  border: 2px solid #f0f0f0;
-  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
   font-size: 14px;
   transition: all 0.3s;
   outline: none;
   box-sizing: border-box;
+  background: var(--bg-color);
+  color: var(--text-main);
 }
 
 .input-wrapper input:focus {
-  border-color: #52c41a;
-  box-shadow: 0 0 0 3px rgba(82, 196, 26, 0.1);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+  background: var(--card-bg);
 }
 
 .error-message {
-  color: #ff4d4f;
+  color: #EF4444;
   font-size: 12px;
   margin: 8px 0 0 0;
 }
@@ -714,7 +662,7 @@ const validateAndSubmit = () => {
 .cancel-button,
 .confirm-button {
   padding: 8px 20px;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -723,21 +671,21 @@ const validateAndSubmit = () => {
 }
 
 .cancel-button {
-  background: #f5f5f5;
-  color: #333;
+  background: var(--bg-color);
+  color: var(--text-secondary);
 }
 
 .cancel-button:hover {
-  background: #e8e8e8;
+  background: #E5E7EB;
 }
 
 .confirm-button {
-  background: #52c41a;
+  background: var(--primary-color);
   color: white;
 }
 
 .confirm-button:hover {
-  background: #73d13d;
+  background: var(--primary-hover);
 }
 
 /* 移动端对话框适配 */

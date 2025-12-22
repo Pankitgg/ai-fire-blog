@@ -8,49 +8,63 @@
 <template>
   <div class="footer">
     <div class="footer-fixed">
-      <div v-if="state.noticeInfo?.content" class="notice">
-        <div>公告</div>
-        <div class="content">{{ state.noticeInfo?.content }}</div>
+      <div v-if="state.noticeInfo?.content" class="notice-card">
+        <div class="notice-title">
+          <i class="iconfont icon-notification"></i>
+          <span>公告</span>
+        </div>
+        <div class="notice-content">{{ state.noticeInfo?.content }}</div>
       </div>
 
-      <img src="@/assets/images/logo1.png" class="logo" />
-      <p class="intro">
-        {{ state.intro }}
-      </p>
-      <div class="tags">
-        <div class="title">热门搜索</div>
+      <div class="site-info">
+        <img src="@/assets/images/logo1.png" class="logo" alt="Logo" />
+        <p class="intro">
+          {{ state.intro || '探索 AI 的无限可能，分享最前沿的技术资讯与实践经验。' }}
+        </p>
+      </div>
+      
+      <div class="tags-section">
+        <div class="section-title">热门搜索</div>
         <div class="tag-list">
           <nuxt-link
             v-for="item in state.tags"
             :key="item"
             :to="`/tag/${item}`"
-            class="item"
-            >{{ item }}</nuxt-link
+            class="tag-item"
           >
+            {{ item }}
+          </nuxt-link>
         </div>
       </div>
-      <MdCatalog editor-id="preview-only" :scroll-element="scrollElement" />
+      
+      <MdCatalog editor-id="preview-only" :scroll-element="scrollElement" class="catalog-wrapper" />
 
-      <div class="corp-links">
-        <a
-          class="friend-link"
-          v-for="item in links"
-          target="_blank"
-          rel="nofollow"
-          :href="item.url"
-          :key="item.id"
-          >{{ item.title }}</a
-        >
+      <div class="friend-links">
+        <div class="section-title">友情链接</div>
+        <div class="links-list">
+          <a
+            class="link-item"
+            v-for="item in links"
+            target="_blank"
+            rel="nofollow"
+            :href="item.url"
+            :key="item.id"
+          >
+            {{ item.title }}
+          </a>
+        </div>
       </div>
-      <div>
+      
+      <div class="copyright-info">
         <a
           target="_blank"
           rel="nofollow"
           href="https://beian.miit.gov.cn"
           class="beian"
-          >{{ state.icp }}</a
         >
-        <div>{{ state.copyright }}</div>
+          {{ state.icp }}
+        </a>
+        <div class="copyright">{{ state.copyright }}</div>
       </div>
     </div>
   </div>
@@ -59,17 +73,13 @@
 <script lang="ts" setup>
 import { MdCatalog } from 'md-editor-v3'
 import request from '@/utils/request'
+
 let scrollElement: HTMLElement | undefined = undefined
 if (process.client) {
   scrollElement = document.documentElement
 }
 
-const getList = async () => {
-  const { data }: any = await request.post('/site/getFriendLinkList')
-  links.value = data?.list || []
-}
 const links = ref<Record<string, string>[]>([])
-
 const state = reactive({
   intro: '',
   icp: '',
@@ -79,101 +89,219 @@ const state = reactive({
     content: ''
   }
 })
-const getDetail = async () => {
-  const { data }: any = await request.post('/site/getSiteInfo')
-  state.copyright = data?.copyright || ''
-  state.intro = data?.intro || ''
-  state.icp = data?.icp || ''
+
+// Data fetching
+const fetchData = async () => {
+  try {
+    const [friendLinks, siteInfo, tags, notices] = await Promise.all([
+      request.post('/site/getFriendLinkList'),
+      request.post('/site/getSiteInfo'),
+      request.post('/blog/getAllTags'),
+      request.post('/site/getNoticeList')
+    ])
+    
+    if (friendLinks.data) links.value = friendLinks.data.list || []
+    
+    if (siteInfo.data) {
+      state.copyright = siteInfo.data.copyright || ''
+      state.intro = siteInfo.data.intro || ''
+      state.icp = siteInfo.data.icp || ''
+    }
+    
+    if (tags.data) state.tags = tags.data || []
+    
+    if (notices.data?.list) {
+      state.noticeInfo = notices.data.list[0] || null
+    }
+  } catch (error) {
+    console.error('Failed to fetch footer data:', error)
+  }
 }
 
-const getTags = async () => {
-  const { data }: any = await request.post('/blog/getAllTags')
-  state.tags = data || []
-}
-const getNoice = async () => {
-  const { data }: any = await request.post('/site/getNoticeList')
-  state.noticeInfo = data?.list ? data?.list[0] : null
-}
-getNoice()
-getDetail()
-getTags()
-getList()
+onMounted(() => {
+  fetchData()
+})
 </script>
 
 <style lang="less" scoped>
-.beian {
-  display: block;
-  line-height: 17px;
-  margin: 6px 0;
-}
-:deep(.md-editor-catalog) {
-  color: #67788a;
-}
 .footer {
-  width: 330px;
-  border-left: 1px solid #ececec;
-  padding-left: 20px;
+  width: 320px;
   flex-shrink: 0;
+  margin-left: 20px;
+  
+  @media (max-width: 1100px) {
+    display: none;
+  }
 }
+
 .footer-fixed {
-  width: 300px;
+  width: 320px;
   padding: 24px 0;
   position: fixed;
-  top: 60px;
-  .logo {
-    height: 36px;
+  top: 70px;
+  height: calc(100vh - 70px);
+  overflow-y: auto;
+  padding-right: 10px;
+  
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
   }
-  .intro {
-    font-size: 13px;
-    line-height: 162.2%;
-    text-align: justify;
-    color: #21293c;
-    margin-top: 12px;
-  }
-  .corp-links {
-    margin-top: 48px;
-    color: #67788a;
-    font-size: 12px;
-    a {
-      color: #67788a;
-      &:hover {
-        color: #f92741;
+  
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+  
+  .notice-card {
+    background: linear-gradient(135deg, rgba(255, 149, 0, 0.1) 0%, rgba(255, 149, 0, 0.05) 100%);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 24px;
+    border: 1px solid rgba(255, 149, 0, 0.2);
+    
+    .notice-title {
+      display: flex;
+      align-items: center;
+      color: #ff9500;
+      font-weight: 600;
+      margin-bottom: 8px;
+      
+      .iconfont {
+        margin-right: 6px;
       }
     }
-    .friend-link {
-      margin-right: 8px;
+    
+    .notice-content {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
     }
   }
-  .tags {
-    margin: 30px 0 0;
-    .title {
-      font-size: 19px;
-      line-height: 27px;
-      color: #21293c;
-      margin-bottom: 20px;
+  
+  .site-info {
+    margin-bottom: 30px;
+    
+    .logo {
+      height: 40px;
+      margin-bottom: 12px;
     }
+    
+    .intro {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      text-align: justify;
+    }
+  }
+  
+  .section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 16px;
+    position: relative;
+    padding-left: 12px;
+    
+    &:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 16px;
+      background: var(--primary-color);
+      border-radius: 2px;
+    }
+  }
+  
+  .tags-section {
+    margin-bottom: 30px;
+    
     .tag-list {
       display: flex;
       flex-wrap: wrap;
+      gap: 8px;
     }
-    .item {
-      padding: 10px 16px;
-      font-size: 14px;
-      color: #4b587c;
-      margin: 0 8px 8px 0;
-      background: #f2f6f9;
+    
+    .tag-item {
+      padding: 6px 12px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      background: var(--bg-secondary);
       border-radius: 6px;
+      transition: all 0.3s;
+      text-decoration: none;
+      
+      &:hover {
+        background: var(--primary-color);
+        color: #fff;
+        transform: translateY(-2px);
+      }
     }
   }
-}
-.notice {
-  background-color: rgba(255, 149, 0, 0.1);
-  padding: 20px;
-  font-size: 16px;
-  margin-bottom: 20px;
-  .content {
-    margin-top: 8px;
+  
+  :deep(.md-editor-catalog) {
+    .md-editor-catalog-link {
+      color: var(--text-secondary);
+      padding: 4px 0;
+      
+      &:hover, &.md-editor-catalog-active {
+        color: var(--primary-color);
+        font-weight: 500;
+      }
+      
+      span {
+        &:hover {
+          color: var(--primary-color);
+        }
+      }
+    }
+    
+    .md-editor-catalog-indicator {
+      background-color: var(--primary-color);
+    }
+  }
+  
+  .friend-links {
+    margin-top: 30px;
+    
+    .links-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    
+    .link-item {
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.3s;
+      
+      &:hover {
+        color: var(--primary-color);
+        text-decoration: underline;
+      }
+    }
+  }
+  
+  .copyright-info {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
     font-size: 12px;
+    color: var(--text-tertiary);
+    
+    .beian {
+      display: block;
+      color: inherit;
+      margin-bottom: 4px;
+      text-decoration: none;
+      
+      &:hover {
+        color: var(--text-secondary);
+      }
+    }
   }
 }
 </style>

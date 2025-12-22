@@ -58,7 +58,7 @@ export default defineNuxtConfig({
       preprocessorOptions: {
         less: {
           modifyVars: {
-            'primary-color': '#0AA679'
+            'primary-color': '#10B981'
           },
           javascriptEnabled: true
         }

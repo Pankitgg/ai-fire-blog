@@ -5,6 +5,17 @@
 -->
 <template>
   <div class="ai-chat-container">
+    <div class="chat-header">
+      <div class="header-left">
+        <i class="iconfont icon-robot"></i>
+        <span>AI 助手</span>
+      </div>
+      <div class="header-right">
+        <span class="status-dot"></span>
+        <span class="status-text">在线</span>
+      </div>
+    </div>
+    
     <div class="chat-history">
       <!-- 欢迎消息 -->
       <div v-if="messages.length === 0" class="welcome-message">
@@ -12,7 +23,7 @@
           <i class="iconfont icon-robot"></i>
         </div>
         <div class="message-content">
-          <p>你可以向我提问、寻求建议或进行日常交流。</p>
+          <p>你好！我是你的 AI 助手。你可以向我提问、寻求建议或进行日常交流。</p>
         </div>
       </div>
       
@@ -64,6 +75,7 @@
           @click="sendMessage"
           :disabled="!inputMessage.trim() || isTyping"
         >
+          <i class="iconfont icon-send"></i>
           发送
         </button>
       </div>
@@ -169,68 +181,122 @@ const scrollToBottom = () => {
   flex-direction: column;
   height: 100%;
   width: 100%;
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
-  background: #fafafa;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  background: var(--bg-color);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
   overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.chat-header {
+  padding: 16px 24px;
+  background: var(--bg-color);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  .header-left {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-main);
+    
+    .iconfont {
+      margin-right: 8px;
+      font-size: 20px;
+      color: var(--primary-color);
+    }
+  }
+  
+  .header-right {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    color: var(--text-secondary);
+    
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      margin-right: 6px;
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+    }
+  }
 }
 
 .chat-history {
   flex: 1;
   overflow-y: auto;
-  padding: 20px;
-  background: #f5f5f5;
+  padding: 24px;
+  background: var(--bg-secondary);
   
   &::-webkit-scrollbar {
     width: 6px;
   }
   
   &::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 3px;
+    background: transparent;
   }
   
   &::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
+    background: var(--border-color);
     border-radius: 3px;
     
     &:hover {
-      background: #a8a8a8;
+      background: var(--text-secondary);
     }
   }
 }
 
 .welcome-message {
   display: flex;
-  margin-bottom: 20px;
-  padding: 15px;
-  background: rgba(106, 170, 121, 0.1);
-  border-radius: 12px;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: var(--bg-color);
+  border-radius: var(--radius-lg);
+  align-items: flex-start;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
 }
 
 .message-item {
   display: flex;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   
   &.user-message {
     flex-direction: row-reverse;
     
     .message-content {
       margin-right: 0;
-      margin-left: 15px;
-      background: #e6f7ff;
-      border: 1px solid #91d5ff;
-      border-radius: 12px 12px 0 12px;
+      margin-left: 16px;
+      background: var(--primary-color);
+      color: #fff;
+      border: none;
+      border-radius: 16px 16px 0 16px;
+      box-shadow: var(--shadow-md);
+      
+      .content {
+        color: #fff;
+      }
+      
+      .time {
+        color: rgba(255, 255, 255, 0.7);
+        text-align: right;
+      }
     }
   }
   
   &.ai-message {
     .message-content {
-      background: #fff;
-      border: 1px solid #d9d9d9;
-      border-radius: 12px 12px 12px 0;
+      background: var(--bg-color);
+      border: 1px solid var(--border-color);
+      border-radius: 16px 16px 16px 0;
+      box-shadow: var(--shadow-sm);
     }
   }
 }
@@ -240,11 +306,12 @@ const scrollToBottom = () => {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #1890ff;
+  background: var(--secondary-color);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
   
   .iconfont {
     color: #fff;
@@ -253,28 +320,28 @@ const scrollToBottom = () => {
 }
 
 .ai-avatar {
-  background: #52c41a;
+  background: var(--primary-color);
 }
 
 .user-message .avatar {
-  background: #fa8c16;
+  background: var(--secondary-color);
 }
 
 .message-content {
-  margin-right: 15px;
-  padding: 12px 16px;
-  max-width: 70%;
+  margin-right: 16px;
+  padding: 14px 18px;
+  max-width: 75%;
   word-wrap: break-word;
   
   .content {
     line-height: 1.6;
-    color: #333;
+    color: var(--text-main);
   }
   
   .time {
     margin-top: 8px;
     font-size: 12px;
-    color: #999;
+    color: var(--text-secondary);
   }
 }
 
@@ -283,11 +350,12 @@ const scrollToBottom = () => {
   border: none;
   max-width: none;
   margin-right: 0;
-  padding: 0 15px;
+  padding: 0 16px;
+  box-shadow: none;
   
   p {
-    margin: 8px 0;
-    color: #333;
+    margin: 0;
+    color: var(--text-main);
     line-height: 1.6;
   }
 }
@@ -308,9 +376,10 @@ const scrollToBottom = () => {
     width: 8px;
     height: 8px;
     margin: 0 2px;
-    background: #999;
+    background: var(--text-secondary);
     border-radius: 50%;
     animation: typing 1.4s infinite ease-in-out both;
+    opacity: 0.6;
     
     &:nth-child(1) {
       animation-delay: -0.32s;
@@ -325,38 +394,41 @@ const scrollToBottom = () => {
 @keyframes typing {
   0%, 80%, 100% {
     transform: scale(0);
-    opacity: 0.5;
   }
   40% {
     transform: scale(1);
-    opacity: 1;
   }
 }
 
 /* 输入区域 */
 .chat-input-area {
-  padding: 20px;
-  background: #fff;
-  border-top: 1px solid #e8e8e8;
+  padding: 24px;
+  background: var(--bg-color);
+  border-top: 1px solid var(--border-color);
 }
 
 textarea {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #d9d9d9;
-  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
   resize: none;
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.6;
   outline: none;
+  background: var(--bg-secondary);
+  color: var(--text-main);
+  transition: all 0.3s;
+  font-family: inherit;
   
   &:focus {
-    border-color: #40a9ff;
-    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    background: var(--bg-color);
   }
   
   &::placeholder {
-    color: #bfbfbf;
+    color: var(--text-secondary);
   }
 }
 
@@ -364,45 +436,74 @@ textarea {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 12px;
 }
 
 .char-count {
   font-size: 12px;
-  color: #999;
+  color: var(--text-secondary);
 }
 
 .send-button {
-  padding: 8px 24px;
-  background: #1890ff;
+  display: flex;
+  align-items: center;
+  padding: 10px 24px;
+  background: var(--primary-color);
   color: #fff;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   font-size: 14px;
   cursor: pointer;
   transition: all 0.3s;
+  box-shadow: var(--shadow-sm);
+  
+  .iconfont {
+    margin-right: 6px;
+    font-size: 14px;
+  }
   
   &:hover:not(:disabled) {
-    background: #40a9ff;
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
   }
   
   &:disabled {
-    background: #f5f5f5;
-    color: #d9d9d9;
+    background: var(--border-color);
+    color: var(--text-secondary);
     cursor: not-allowed;
+    box-shadow: none;
   }
 }
 
 /* 响应式设计 */
 @media (max-width: 768px) {
   .ai-chat-container {
-    height: 90vh;
+    height: 100%;
     border-radius: 0;
     box-shadow: none;
+    border: none;
+  }
+  
+  .chat-header {
+    padding: 12px 16px;
+  }
+  
+  .chat-history {
+    padding: 16px;
   }
   
   .message-content {
     max-width: 85%;
+    padding: 12px 14px;
+  }
+  
+  .chat-input-area {
+    padding: 12px;
+  }
+  
+  textarea {
+    padding: 12px;
   }
 }
 </style>

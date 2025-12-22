@@ -1,0 +1,119 @@
+{
+  "book_metadata": {
+    "title": "人月神话 (The Mythical Man-Month)",
+    "edition_scope": "20周年纪念版 (包含Ch1-Ch15原书内容 + Ch16-Ch19增补内容)",
+    "primary_thesis": "软件开发的根本难题在于其核心复杂性，依靠增加人力无法解决进度问题，必须通过概念完整性、合理的组织架构和迭代流程来应对。"
+  },
+  "deep_knowledge_structure": {
+    "part_1_the_problem_space": {
+      "title": "困境与误区 (Ch1-Ch2)",
+      "core_concepts": [
+        {
+          "concept": "焦油坑 (The Tar Pit)",
+          "detail": "软件开发看似简单，实则如史前焦油坑。不仅是个体编程，而是要打造'编程系统产品'。将一个独立程序转化为'编程系统产品'（既是系统又是产品），成本和工作量通常是原来的 9 倍（3x3）。"
+        },
+        {
+          "concept": "人月神话 (The Mythical Man-Month)",
+          "logic": "人月是衡量工作量的危险单位，暗示人员和时间可以互换。",
+          "reality": "对于不可分解的任务（如产妇生孩子），人手增加完全无效。对于可分解任务，沟通成本（n(n-1)/2）和培训成本会抵消人力增加的优势。",
+          "brooks_law_extended": "向进度落后的项目中增加人手，往往会使项目更加落后（Adding manpower to a late software project makes it later）。"
+        }
+      ]
+    },
+    "part_2_organization_and_architecture": {
+      "title": "组织与架构之道 (Ch3-Ch7)",
+      "key_strategies": [
+        {
+          "strategy": "外科手术式队伍 (The Surgical Team)",
+          "problem_solved": "如何在大型项目中保持'概念完整性'并维持高效率？",
+          "structure": {
+            "surgeon (首席程序员)": "唯一的架构师和核心代码编写者，类似执刀医生。",
+            "copilot (副手)": "外科医生的思维替身，能编写代码但不负责决策。",
+            "administrator (管理员)": "处理财务、人员、机器时间等行政事务。",
+            "editor (编辑)": "负责文档的润色和发布，而非撰写。",
+            "others": "包括工具维护人、测试人员、语言专家等，全员服务于'医生'。"
+          }
+        },
+        {
+          "strategy": "概念完整性 (Conceptual Integrity)",
+          "definition": "系统设计中最核心的原则。为了系统易用，必须反映唯一的设计理念。",
+          "implementation": "贵族专制（Aristocracy）是必要的。架构师决定'做什么'（What），实现人员决定'怎么做'（How）。"
+        },
+        {
+          "strategy": "第二系统效应 (The Second-System Effect)",
+          "warning": "架构师在设计第二个系统时，倾向于将第一个系统中受阻的功能全部加入，导致功能臃肿。",
+          "solution": "架构师需自我纪律，并重视实现人员对资源估算的反馈。"
+        }
+      ]
+    },
+    "part_3_process_and_execution": {
+      "title": "流程控制与实施 (Ch8-Ch15)",
+      "critical_points": [
+        {
+          "point": "文档即管理 (The Documentary Hypothesis)",
+          "insight": "只有通过正式的文档（目标、规格说明、进度表、预算、组织结构图），项目经理才能真正掌控项目。文档不仅是记录，更是沟通工具。"
+        },
+        {
+          "point": "变更与熵 (Change and Entropy)",
+          "original_view (Ch11)": "打算扔掉一个（Plan to throw one away）。第一个版本注定是失败的试验品。",
+          "revised_view (Ch19)": "更正为'增量构建'（Incremental Build）。软件应是从核心开始生长，而非一次性构建后丢弃。"
+        },
+        {
+          "point": "进度监控 (Hatching a Catastrophe)",
+          "phenomenon": "项目延期是一天一天累积的，而非突然发生的。",
+          "solution": "里程碑（Milestones）必须是具体的、特定的、可测量的事件（如'编码完成'而非'编码进行中'）。"
+        },
+        {
+          "point": "工具开发 (Sharp Tools)",
+          "advice": "项目组应配置专门的工具维护人员，开发通用工具（如高级语言、模拟器）而非因陋就简。"
+        }
+      ]
+    },
+    "part_4_the_essence_of_software": {
+      "title": "软件工程的本质 (Ch16-Ch17)",
+      "article": "没有银弹 (No Silver Bullet)",
+      "thesis": "在未来十年（指1986年后的十年），没有任何单一技术或管理方法能将软件生产率提高一个数量级。",
+      "distinction": {
+        "essence (根本困难)": "软件固有的特性，无法消除。",
+        "accidents (次要困难)": "目前实现手段造成的困难（如语法错误、硬件限制），可通过工具解决。",
+        "four_inherent_properties": [
+          "复杂性 (Complexity): 状态数量巨大，非线性增长。",
+          "一致性 (Conformity): 软件必须遵从人为的、无规律的接口标准。",
+          "可变性 (Changeability): 软件受到的变更压力远超硬件。",
+          "不可见性 (Invisibility): 软件无法像建筑一样进行可视化几何表达。"
+        ]
+      },
+      "promising_approaches": [
+        "购买而非构建 (Buy vs. Build)",
+        "需求精炼与快速原型 (Requirements Refinement & Prototyping)",
+        "增量开发 (Incremental Development)",
+        "培养卓越的设计师 (Great Designers)"
+      ]
+    },
+    "part_5_retrospective_20_years_later": {
+      "title": "20年后的反思与修正 (Ch18-Ch19)",
+      "key_updates": [
+        {
+          "topic": "瀑布模型 vs 增量模型",
+          "correction": "原书第11章'打算扔掉一个'暗示了瀑布模型，作者在Ch19中明确承认这是一种错误观点。正确的做法是'增量开发'——先让系统跑起来，再逐步扩充功能。"
+        },
+        {
+          "topic": "信息隐藏 (Information Hiding)",
+          "acknowledgment": "作者承认自己在1975年低估了Parnas的'信息隐藏'（封装）理论的重要性。现在认为这是唯一能应对软件'复杂性'的设计策略。"
+        },
+        {
+          "topic": "人是关键",
+          "insight": "尽管流程和工具很重要，但核心依然是'人'。将原本一般的团队重组并不能解决问题，关键在于寻找和培养高素质的工程设计人员。"
+        }
+      ]
+    }
+  },
+  "famous_aphorisms": [
+    "向进度落后的软件项目增加人手，只会使进度更加落后。",
+    "系统设计中的概念完整性是核心。",
+    "适合未生成代码的唯一管理工具是文档。",
+    "软件开发中没有银弹。",
+    "程序员不仅要写程序，还要写文档（针对用户）。",
+    "一个延期一年的项目是怎样造成的？是一天一天造成的。"
+  ]
+}

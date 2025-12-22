@@ -11,13 +11,15 @@
     class="index-tabs"
     @change="setActiveKey"
   >
-    <a-tab-pane key="0" tab="最新"> </a-tab-pane>
-    <a-tab-pane key="1" tab="热门"> </a-tab-pane>
+    <a-tab-pane key="0" tab="最新消息"> </a-tab-pane>
+    <a-tab-pane key="1" tab="一周热门"> </a-tab-pane>
+    <a-tab-pane key="2" tab="排行榜"> </a-tab-pane>
   </a-tabs>
   <div
     v-infinite-scroll="load"
     :infinite-scroll-immediate="false"
     infinite-scroll-distance="10"
+    class="articles-grid"
   >
     <ArticleItem
       v-for="(item, index) in state.list"
@@ -65,20 +67,32 @@ load()
     justify-content: center;
     font-size: 19px;
     line-height: 27px;
-    color: #67788a;
+    color: var(--text-secondary);
     &.ant-tabs-tab-active {
       .ant-tabs-tab-btn {
-        color: #21293c;
+        color: var(--text-main);
       }
     }
   }
   :deep(.ant-tabs-nav) {
-    margin-bottom: 0;
+    margin-bottom: 20px;
   }
   :deep(.ant-tabs-ink-bar) {
     height: 3px;
-    background: #21293c;
+    background: var(--text-main);
     border-radius: 12px;
+  }
+}
+
+.articles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+  padding: 0 20px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    padding: 0;
   }
 }
 </style>
