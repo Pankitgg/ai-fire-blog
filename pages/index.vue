@@ -8,8 +8,8 @@
           <span class="logo-text">AI-Fire Hub</span>
         </div>
         <div class="nav-menu">
-          <a href="#tools">工具箱</a>
-          <a href="#info">资讯流</a>
+          <a href="#tool">全能工作台</a>
+          <a href="#blog">资讯流</a>
           <a href="https://blog.ai-nous.com/" target="_blank" class="external-link">
             技术博客 <i class="iconfont icon-link"></i>
           </a>
@@ -120,6 +120,132 @@
         </div>
       </div>
     </section>
+    <!-- 工作台 -->
+    <section class="section workbench-section" id="tool">
+      <div class="section-container">
+        <div class="workbench-card">
+          <div class="workbench-content">
+            <div class="workbench-badge">Windows AI 工作台</div>
+            <h2>把常用 AI、组件与网页工具装进一个桌面工作台</h2>
+            <p class="workbench-desc">
+              集成数字员工、多人会议室、组件市场（热加载插件）与小程序聚合，把碎片化工具沉淀成可复用的工作流。
+            </p>
+            <div class="workbench-features">
+              <div class="feature-item">
+                <div class="feature-icon">👥</div>
+                <div class="feature-text">
+                  <div class="t">数字员工</div>
+                  <div class="d">为不同角色配置提示词与模型</div>
+                </div>
+              </div>
+              <div class="feature-item">
+                <div class="feature-icon">🗣️</div>
+                <div class="feature-text">
+                  <div class="t">会议室协作</div>
+                  <div class="d">多员工参与讨论，历史可保存</div>
+                </div>
+              </div>
+              <div class="feature-item">
+                <div class="feature-icon">🧩</div>
+                <div class="feature-text">
+                  <div class="t">插件热加载</div>
+                  <div class="d">Vue 组件即插件，可安装可优化</div>
+                </div>
+              </div>
+              <div class="feature-item">
+                <div class="feature-icon">🌐</div>
+                <div class="feature-text">
+                  <div class="t">小程序聚合</div>
+                  <div class="d">把常用网页工具统一入口</div>
+                </div>
+              </div>
+            </div>
+            <div class="workbench-actions">
+              <a class="workbench-btn" href="https://studio.ai-nous.com/" target="_blank" rel="noopener">
+                打开工作台官网 <i class="iconfont icon-link"></i>
+              </a>
+              <div class="workbench-tip">点击后在新窗口打开</div>
+            </div>
+          </div>
+          <div class="workbench-visual">
+            <div class="workbench-mock">
+              <div class="mock-top">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+                <div class="mock-title">AI Tool Windows 工作台</div>
+              </div>
+              <div class="mock-body">
+                <div class="mock-grid">
+                  <div class="mock-tile">
+                    <div class="k">Employees</div>
+                    <div class="v">Prompt · Model</div>
+                  </div>
+                  <div class="mock-tile">
+                    <div class="k">Meeting</div>
+                    <div class="v">Multi-agent</div>
+                  </div>
+                  <div class="mock-tile">
+                    <div class="k">Plugins</div>
+                    <div class="v">Hot Reload</div>
+                  </div>
+                  <div class="mock-tile">
+                    <div class="k">Mini Apps</div>
+                    <div class="v">One-click</div>
+                  </div>
+                </div>
+                <div class="mock-glow"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- 资讯流 -->
+    <section class="section news-ticker-section" id="blog">
+      <div class="section-container">
+        <div class="section-title">
+          <h2>资讯流</h2>
+          <p>来自「每日快讯」的最新文章</p>
+        </div>
+
+        <div class="ticker-card">
+          <div class="ticker-head">
+            <div class="ticker-tag">Daily News</div>
+            <button class="ticker-refresh" :disabled="newsLoading" @click="loadDailyNews">
+              {{ newsLoading ? '刷新中...' : '刷新' }}
+            </button>
+          </div>
+
+          <div class="ticker-empty" v-if="!newsLoading && tickerSourceList.length === 0">
+            暂无快讯内容
+          </div>
+
+          <div class="ticker-wrap" v-else>
+            <div class="ticker-track" :style="{ animationDuration: tickerDuration + 's' }">
+              <div
+                v-for="item in tickerItems"
+                :key="String(item.id) + '-' + item.__dup"
+                class="ticker-item"
+                @click="openNews(item)"
+              >
+                <div class="thumb" v-if="item.thumbnail">
+                  <img :src="item.thumbnail" :alt="item.title" />
+                </div>
+                <div class="thumb placeholder" v-else>
+                  <div class="ph">NEWS</div>
+                </div>
+                <div class="info">
+                  <div class="title">{{ item.title }}</div>
+                  <div class="intro">{{ item.intro }}</div>
+                  <div class="meta">{{ formatTime(item.publishTime) }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
     <!-- 迷思 -->
     <MythSection 
       class="experience-box-section" 
@@ -216,10 +342,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onUnmounted } from 'vue'
+import { ref, computed, onUnmounted, onMounted } from 'vue'
 import { useRouter } from 'nuxt/app'
 import { recommendedBooks } from '@/utils/bookRegistry'
 import MythSection from '~/components/myths/MythSection.vue'
+import request from '@/utils/request'
 
 definePageMeta({
   layout: false
@@ -302,6 +429,65 @@ const lensBorderStyle = computed(() => {
     top: `${mouseY.value}px`,
     opacity: 1
   }
+})
+
+type CateBlogItem = {
+  id: number
+  title: string
+  intro: string
+  publishTime: string
+  thumbnail: string
+}
+
+const newsLoading = ref(false)
+const tickerSourceList = ref<CateBlogItem[]>([])
+
+const tickerDuration = computed(() => {
+  const n = tickerSourceList.value.length
+  if (n <= 0) return 14
+  const seconds = Math.max(14, Math.min(34, n * 3))
+  return seconds
+})
+
+const tickerItems = computed(() => {
+  const list = tickerSourceList.value || []
+  const out: Array<CateBlogItem & { __dup: number }> = []
+  for (const item of list) out.push({ ...item, __dup: 0 })
+  for (const item of list) out.push({ ...item, __dup: 1 })
+  return out
+})
+
+const formatTime = (t: string) => {
+  if (!t) return ''
+  const d = new Date(t)
+  if (Number.isNaN(d.getTime())) return String(t)
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`
+}
+
+const openNews = (item: CateBlogItem) => {
+  if (!item?.id) return
+  router.push(`/detail/${item.id}`)
+}
+
+const loadDailyNews = async () => {
+  if (newsLoading.value) return
+  newsLoading.value = true
+  try {
+    const res: any = await request.post('/blog/getCateBlogList', {
+      cateId: 4,
+      pageNum: 1,
+      pageSize: 10
+    })
+    const list = (res?.data?.list as CateBlogItem[]) || []
+    tickerSourceList.value = list
+  } finally {
+    newsLoading.value = false
+  }
+}
+
+onMounted(() => {
+  loadDailyNews()
 })
 </script>
 
@@ -1103,6 +1289,395 @@ const lensBorderStyle = computed(() => {
   }
 }
 
+.workbench-section {
+  background: #0b1220;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin-bottom: 60px;
+}
+
+.workbench-card {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 44px;
+  align-items: center;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.92) 0%, rgba(2, 6, 23, 0.96) 100%);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 28px;
+  padding: 48px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 24px 70px rgba(2, 6, 23, 0.55);
+}
+
+.workbench-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(90deg, #10b981, #3b82f6, #8b5cf6);
+}
+
+.workbench-content {
+  position: relative;
+  z-index: 2;
+}
+
+.workbench-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.16);
+  border: 1px solid rgba(16, 185, 129, 0.28);
+  color: #a7f3d0;
+  font-weight: 800;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+  margin-bottom: 14px;
+}
+
+.workbench-content h2 {
+  font-size: 2.25rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: #f8fafc;
+  margin-bottom: 14px;
+  line-height: 1.15;
+}
+
+.workbench-desc {
+  color: rgba(226, 232, 240, 0.85);
+  font-size: 1.1rem;
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+.workbench-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 16px;
+  margin-bottom: 26px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  backdrop-filter: blur(10px);
+}
+
+.feature-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.95), rgba(59, 130, 246, 0.9));
+  color: #ffffff;
+  font-size: 18px;
+}
+
+.feature-text .t {
+  font-weight: 900;
+  color: rgba(248, 250, 252, 0.95);
+  font-size: 0.95rem;
+  line-height: 1.1;
+}
+
+.feature-text .d {
+  color: rgba(226, 232, 240, 0.7);
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+.workbench-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.workbench-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #10b981, #3b82f6);
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 800;
+  transition: transform 0.2s, filter 0.2s;
+}
+
+.workbench-btn:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+.workbench-tip {
+  font-size: 0.9rem;
+  color: rgba(148, 163, 184, 0.9);
+}
+
+.workbench-visual {
+  position: relative;
+  z-index: 1;
+}
+
+.workbench-mock {
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  background: #0b1220;
+  box-shadow: 0 22px 60px rgba(2, 6, 23, 0.24);
+}
+
+.mock-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mock-top .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.mock-top .dot.red { background: #ef4444; }
+.mock-top .dot.yellow { background: #f59e0b; }
+.mock-top .dot.green { background: #10b981; }
+
+.mock-title {
+  margin-left: 10px;
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.mock-body {
+  position: relative;
+  padding: 18px;
+  min-height: 220px;
+}
+
+.mock-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  position: relative;
+  z-index: 2;
+}
+
+.mock-tile {
+  border-radius: 16px;
+  padding: 14px 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mock-tile .k {
+  color: #ffffff;
+  font-weight: 900;
+  font-size: 14px;
+}
+
+.mock-tile .v {
+  margin-top: 6px;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 12px;
+}
+
+.mock-glow {
+  position: absolute;
+  right: -80px;
+  bottom: -80px;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  filter: blur(40px);
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.45), rgba(59, 130, 246, 0.22), rgba(139, 92, 246, 0));
+  z-index: 1;
+}
+
+.news-ticker-section {
+  background: #ffffff;
+  border-top: 1px solid #f3f4f6;
+  margin-bottom: 60px;
+}
+
+.ticker-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 28px;
+  padding: 26px;
+  overflow: hidden;
+}
+
+.ticker-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.ticker-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(59, 130, 246, 0.12);
+  color: #1d4ed8;
+  font-weight: 900;
+  font-size: 0.8rem;
+}
+
+.ticker-refresh {
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #0f172a;
+  font-weight: 800;
+  border-radius: 12px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.ticker-refresh:hover:not(:disabled) {
+  background: #f1f5f9;
+  transform: translateY(-1px);
+}
+
+.ticker-refresh:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.ticker-empty {
+  padding: 24px;
+  color: #64748b;
+  font-weight: 700;
+  text-align: center;
+  border: 1px dashed #cbd5e1;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.ticker-wrap {
+  height: 320px;
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.ticker-track {
+  display: flex;
+  flex-direction: column;
+  animation-name: tickerScroll;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+.ticker-wrap:hover .ticker-track {
+  animation-play-state: paused;
+}
+
+@keyframes tickerScroll {
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
+}
+
+.ticker-item {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 14px;
+  padding: 14px;
+  cursor: pointer;
+  border-bottom: 1px solid #e2e8f0;
+  transition: background 0.2s;
+}
+
+.ticker-item:hover {
+  background: #f8fafc;
+}
+
+.ticker-item:last-child {
+  border-bottom: none;
+}
+
+.ticker-item .thumb {
+  width: 64px;
+  height: 64px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  background: #0f172a;
+}
+
+.ticker-item .thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ticker-item .thumb.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+}
+
+.ticker-item .thumb.placeholder .ph {
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 900;
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+
+.ticker-item .info .title {
+  font-weight: 900;
+  color: #0f172a;
+  line-height: 1.25;
+  margin-bottom: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.ticker-item .info .intro {
+  color: #475569;
+  font-size: 0.92rem;
+  line-height: 1.35;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.ticker-item .info .meta {
+  margin-top: 8px;
+  color: #64748b;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
   .flat-grid {
@@ -1118,6 +1693,12 @@ const lensBorderStyle = computed(() => {
   .browser-mockup {
       height: 280px;
       transform: none;
+  }
+
+  .workbench-card {
+    grid-template-columns: 1fr;
+    padding: 40px;
+    gap: 32px;
   }
 }
 
@@ -1141,6 +1722,22 @@ const lensBorderStyle = computed(() => {
   
   .hero-text-overlay h1 {
       font-size: 2.5rem !important;
+  }
+
+  .workbench-card {
+    padding: 26px;
+  }
+
+  .workbench-content h2 {
+    font-size: 1.75rem;
+  }
+
+  .workbench-features {
+    grid-template-columns: 1fr;
+  }
+
+  .ticker-wrap {
+    height: 360px;
   }
 }
 </style>

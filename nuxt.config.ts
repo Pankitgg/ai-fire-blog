@@ -21,7 +21,7 @@ export default defineNuxtConfig({
           href: '//at.alicdn.com/t/c/font_3420979_f6dbhdrnbpu.css'
         }
       ],
-      script: [{ type: 'text/javascript', src: '(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "uw2ho8lsi7");' }]
+      script: [{ type: 'text/javascript', innerHTML: '(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "uw2ho8lsi7");' }]
       // script: [{ src: 'https://at.alicdn.com/t/font_3420979_o8r3ia8tx4c.js' }]
     }
   },
@@ -109,8 +109,9 @@ export default defineNuxtConfig({
   nitro: {
     devProxy: {
       '/api': {
-        // target: 'http://60.205.182.150:29090',
-        target: 'http://localhost:29090',
+        // target:'https://ai-nous.com',
+        target: 'http://60.205.182.150:29090',
+        // target: 'http://localhost:29090',
         changeOrigin: true,
         rewrite: (path: any) => path.replace(/^\/api/, '')
       }
