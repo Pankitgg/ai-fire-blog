@@ -11,7 +11,7 @@ export default defineNuxtConfig({
       meta: [
         { name: 'keywords', content: '智心一梦 ai-nous' },
         { name: 'description', content: '智心一梦 ai-nous' },
-        { name: 'baidu-site-verification', content: 'codeva-eIhlB28TVw' },
+        { name: 'baidu-site-verification', content: 'codeva-qYNuIQdOG2' },
          { name: 'msvalidate.01', content: 'FB0B6BA42846ACD8ABD4D9FEF13DA3D0' }
       ],
       link: [
@@ -110,8 +110,8 @@ export default defineNuxtConfig({
     devProxy: {
       '/api': {
         // target:'https://ai-nous.com',
-        target: 'http://60.205.182.150:29090',
-        // target: 'http://localhost:29090',
+        // target: 'http://60.205.182.150:29090',
+        target: 'http://localhost:29090',
         changeOrigin: true,
         rewrite: (path: any) => path.replace(/^\/api/, '')
       }
