@@ -56,6 +56,8 @@
       </div>
       
       <div class="copyright-info">
+        <a href="/sitemap.xml" target="_blank" class="sitemap-link">Sitemap</a>
+        <span class="divider">|</span>
         <a
           target="_blank"
           rel="nofollow"
@@ -291,16 +293,28 @@ onMounted(() => {
     border-top: 1px solid var(--border-color);
     font-size: 12px;
     color: var(--text-tertiary);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
     
-    .beian {
-      display: block;
+    .sitemap-link, .beian {
       color: inherit;
-      margin-bottom: 4px;
       text-decoration: none;
+      transition: color 0.3s;
       
       &:hover {
         color: var(--text-secondary);
       }
+    }
+    
+    .divider {
+      margin: 0 8px;
+      color: var(--border-color);
+    }
+    
+    .copyright {
+      width: 100%;
+      margin-top: 8px;
     }
   }
 }

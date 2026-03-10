@@ -30,10 +30,14 @@
         v-for="tool in filteredTools" 
         :key="tool.id"
         class="tool-card"
+        @click="goToDetail(tool.id)"
       >
-        <a :href="tool.url" target="_blank" class="tool-link">
+        <div class="tool-link">
           <div class="tool-header">
-            <div class="tool-logo">{{ tool.logo || '🤖' }}</div>
+            <div class="tool-logo">
+              <img v-if="tool.logo" :src="tool.logo" :alt="tool.name" />
+              <span v-else>🤖</span>
+            </div>
             <div class="tool-rating" v-if="tool.rating">
               <span class="rating-star">⭐</span>
               <span class="rating-score">{{ tool.rating }}</span>
@@ -41,10 +45,10 @@
           </div>
           <div class="tool-content">
             <h3 class="tool-name">{{ tool.name }}</h3>
-            <p class="tool-description">{{ tool.description }}</p>
+            <p class="tool-description">{{ tool.intro || tool.description }}</p>
             <div class="tool-tags">
               <span 
-                v-for="tag in tool.tags" 
+                v-for="tag in (tool.tags ? tool.tags.split(/[,，]/) : [])" 
                 :key="tag"
                 class="tool-tag"
               >
@@ -53,15 +57,15 @@
             </div>
           </div>
           <div class="tool-footer">
-            <span class="visit-btn">立即访问</span>
-            <i class="iconfont icon-link"></i>
+            <span class="visit-btn">查看详情</span>
+            <i class="iconfont icon-right"></i>
           </div>
-        </a>
+        </div>
       </div>
     </div>
 
     <!-- 空状态 -->
-    <div v-if="filteredTools.length === 0" class="empty-state">
+    <div v-if="filteredTools.length === 0 && !loading" class="empty-state">
       <i class="iconfont icon-empty"></i>
       <p>暂无相关AI工具</p>
     </div>
@@ -69,27 +73,116 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { aiCategories, aiTools, AiTool, AiCategory } from './aidata';
+import { ref, computed, onMounted } from 'vue';
+import request from '@/utils/request';
+import { useRouter } from 'vue-router';
 
-// 状态管理
-const selectedCategory = ref<string>('all');
+const router = useRouter();
+const loading = ref(false);
+const productList = ref<any[]>([]);
+const categoryList = ref<any[]>([]);
+const selectedCategory = ref<string | number>('all');
+
+// 获取分类
+const getCategories = async () => {
+  try {
+    const { data }: any = await request.post('/blog/getCateList', { status: 1 });
+    if (data) {
+      categoryList.value = [
+        { id: 'all', name: '全部', icon: '🔍', description: '所有AI工具' },
+        ...data.map((item: any) => ({
+          id: item.id,
+          name: item.name,
+          icon: item.icon || '💡',
+          description: item.intro
+        }))
+      ];
+    }
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+// 获取产品列表
+const getProducts = async () => {
+  loading.value = true;
+  try {
+    const { data }: any = await request.post('/product/getProductList', {
+      pageNum: 1,
+      pageSize: 100,
+      cateId: selectedCategory.value === 'all' ? undefined : selectedCategory.value
+    });
+    productList.value = data?.list || [];
+  } catch (e) {
+    console.error(e);
+  } finally {
+    loading.value = false;
+  }
+};
 
 // 过滤工具列表
 const filteredTools = computed(() => {
-  if (selectedCategory.value === 'all') {
-    return aiTools;
-  }
-  return aiTools.filter(tool => tool.category === selectedCategory.value);
+  return productList.value;
 });
 
 // 选择分类
-const selectCategory = (categoryId: string) => {
+const selectCategory = (categoryId: string | number) => {
   selectedCategory.value = categoryId;
+  getProducts();
 };
+
+const goToDetail = (id: number) => {
+  router.push(`/product/${id}`);
+};
+
+onMounted(() => {
+  getCategories();
+  getProducts();
+});
 </script>
 
 <style lang="less" scoped>
+.tool-logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #f0fdf4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-right: 16px;
+  overflow: hidden;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.tool-card {
+  cursor: pointer;
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  transition: all 0.3s ease;
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.15);
+    border-color: var(--primary-color);
+    
+    .visit-btn {
+      color: var(--primary-color);
+    }
+  }
+}
+
 .ai-product-container {
   max-width: 1200px;
   margin: 0 auto;

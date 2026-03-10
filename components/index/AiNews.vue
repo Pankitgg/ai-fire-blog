@@ -9,22 +9,25 @@
   <div class="ai-news-section">
     <div class="section-header">
       <h2>AI资讯</h2>
-      <a href="#" class="more-link">查看更多</a>
+      <NuxtLink to="/blog" class="more-link">查看更多</NuxtLink>
     </div>
     <div class="news-grid">
-      <div v-for="(news, index) in newsList" :key="index" class="news-card">
+      <NuxtLink v-for="(news, index) in newsList" :key="index" :to="news.link" class="news-card">
         <div class="news-image">
-          <img :src="news.image" :alt="news.title" />
+          <img :src="news.image" :alt="news.title" v-if="news.image"/>
+          <div class="news-image-placeholder" v-else>
+            <i class="iconfont icon-article"></i>
+          </div>
         </div>
         <div class="news-content">
           <h3 class="news-title">{{ news.title }}</h3>
           <p class="news-description">{{ news.description }}</p>
           <div class="news-meta">
             <span class="news-date">{{ news.date }}</span>
-            <span class="news-source">{{ news.source }}</span>
+            <span class="news-source">{{ news.source }} 阅读</span>
           </div>
         </div>
-      </div>
+      </NuxtLink>
     </div>
   </div>
 </template>
@@ -32,6 +35,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import request from '@/utils/request'
+import TimeUtil from '@/utils/time'
 
 interface NewsItem {
   id: number
@@ -45,54 +49,31 @@ interface NewsItem {
 
 const newsList = ref<NewsItem[]>([])
 
-// 模拟数据 - 实际项目中应从API获取
-const mockNewsData: NewsItem[] = [
-  {
-    id: 1,
-    title: "OpenAI发布GPT-4，多模态能力全面提升",
-    description: "OpenAI最新发布的GPT-4模型在多模态理解、推理能力和安全性方面都有显著提升...",
-    image: "https://picsum.photos/id/1/300/200",
-    date: "2023-03-15",
-    source: "TechCrunch",
-    link: "#"
-  },
-  {
-    id: 2,
-    title: "谷歌推出PaLM 2，挑战OpenAI的GPT系列",
-    description: "谷歌在I/O开发者大会上推出新一代大语言模型PaLM 2，支持40多种语言...",
-    image: "https://picsum.photos/id/2/300/200",
-    date: "2023-05-10",
-    source: "Google Blog",
-    link: "#"
-  },
-  {
-    id: 3,
-    title: "Meta开源Llama 2，推动AI民主化进程",
-    description: "Meta公司宣布开源Llama 2大语言模型，允许开发者和企业自由使用和修改...",
-    image: "https://picsum.photos/id/3/300/200",
-    date: "2023-07-18",
-    source: "Meta AI",
-    link: "#"
-  },
-  {
-    id: 4,
-    title: "AI绘画工具Midjourney V5.2发布，支持超高清图像",
-    description: "Midjourney最新版本V5.2带来了更高的图像质量、更精确的提示词理解和新的缩放功能...",
-    image: "https://picsum.photos/id/4/300/200",
-    date: "2023-06-22",
-    source: "Midjourney Blog",
-    link: "#"
-  }
-]
-
 const fetchNewsData = async () => {
   try {
-    // 实际项目中应使用API获取数据
-    // const { data } = await request.get('/ai-news/list')
-    // newsList.value = data
-    
-    // 使用模拟数据
-    newsList.value = mockNewsData
+    // 获取分类列表
+    const { data: cateData }: any = await request.post('/blog/getCateList')
+    if (cateData && cateData.length > 0) {
+      const firstCateId = cateData[0].id
+      // 获取该分类下的博客列表
+      const { data }: any = await request.post('/blog/getCateBlogList', {
+        pageNum: 1,
+        pageSize: 6,
+        cateId: firstCateId
+      })
+      
+      if (data && data.list) {
+        newsList.value = data.list.map((item: any) => ({
+          id: item.id,
+          title: item.title,
+          description: item.intro,
+          image: item.thumbnail,
+          date: TimeUtil.timeFormat(+new Date(item.publishTime) / 1000),
+          source: item.readCount || 0,
+          link: `/detail/${item.id}`
+        }))
+      }
+    }
   } catch (error) {
     console.error('Failed to fetch news data:', error)
   }
@@ -141,6 +122,9 @@ onMounted(() => {
 }
 
 .news-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);

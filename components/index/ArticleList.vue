@@ -39,14 +39,31 @@ const state = reactive({
   list: []
 })
 const load = async () => {
+  // 如果是最新消息（0）或一周热门（1），且已经加载了数据，则不再加载更多（限制为6条）
+  if (['0', '1'].includes(activeKey.value) && state.list.length >= 6) {
+    state.hasMore = false
+    return
+  }
+
   if (!state.hasMore) return
+  
+  const pageSize = ['0', '1'].includes(activeKey.value) ? 6 : 10
+  
   const { data }: any = await request.post('/blog/getBlogListByAction', {
     pageNum: pageNum.value,
-    pageSize: 10,
+    pageSize: pageSize,
     action: Number(activeKey.value)
   })
+  
   pageNum.value++
-  state.hasMore = data?.hasMore as boolean
+  
+  // 对于限制条数的tab，加载一次后就认为没有更多了
+  if (['0', '1'].includes(activeKey.value)) {
+    state.hasMore = false
+  } else {
+    state.hasMore = data?.hasMore as boolean
+  }
+  
   state.list = state.list.concat(data?.list || [])
 }
 

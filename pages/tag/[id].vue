@@ -90,6 +90,11 @@ const load = async () => {
     loading.value = false
   }
 }
+
+// 自动加载第一页
+onMounted(() => {
+  load()
+})
 </script>
 
 <style lang="less" scoped>

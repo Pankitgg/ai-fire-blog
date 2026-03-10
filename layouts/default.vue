@@ -10,7 +10,7 @@
   <div class="content-containter">
     <LeftMenu />
     <NuxtPage class="content-body" />
-    <!-- <Footer /> -->
+    <Footer />
   </div>
 </template>
 

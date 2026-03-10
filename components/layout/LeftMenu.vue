@@ -28,23 +28,23 @@
 import { ref } from 'vue'
 // 菜单列表数据
 const menus = ref<Record<string, string>[]>([
-  {
-    icon: 'icon-home',
-    name: '首页',
-    url: '/home'
-  },
+  // {
+  //   icon: 'icon-home',
+  //   name: '首页',
+  //   url: '/home'
+  // },
   {
     icon: 'icon-blog',
     name: 'AI资讯',
     url: '/blog'
   },
   {
-    icon: 'icon-robot',
+    icon: 'icon-data',
     name: 'AI产品库',
     url: '/product/aiproduct'
   },
   {
-    icon: 'icon-robot',
+    icon: 'icon-Book_duotone_line',
     name: '图书',
     url: '/book/book'
   },
@@ -54,7 +54,7 @@ const menus = ref<Record<string, string>[]>([
     url: '/specialColumn'
   },
   {
-    icon: 'icon-data',
+    icon: 'icon-profile',
     name: '关于',
     url: '/profile'
   }
@@ -133,7 +133,7 @@ const menus = ref<Record<string, string>[]>([
     width: 180px;
   }
   .content-body {
-    max-width: calc(100% - 510px);
+    max-width: calc(100% );
   }
 }
 
@@ -159,7 +159,7 @@ const menus = ref<Record<string, string>[]>([
     }
   }
   .content-body {
-    max-width: calc(100% - 410px);
+    max-width: calc(100% );
   }
 }
 

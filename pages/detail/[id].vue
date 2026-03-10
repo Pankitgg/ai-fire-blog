@@ -52,7 +52,7 @@ import dayjs from 'dayjs'
 const router = useRouter()
 const route = useRoute()
 const goback = () => {
-  router.go(-1)
+  router.push('/blog')
 }
 const state = reactive({
   content: '',
@@ -63,18 +63,23 @@ const state = reactive({
 
 const getDetail = async () => {
   try {
-    const { data }: any = await request.post('/blog/getBlogDetail', {
-      id: Number(route.params.id)
-    })
-    state.content = data?.blog.content || ''
-    state.time = data?.blog.updateTime || ''
-    state.title = data?.blog.title || ''
-    state.list = (data?.list as []) || []
+    const { data }: any = await useAsyncData(
+      `blog-detail-${route.params.id}`,
+      () =>
+        request.post('/blog/getBlogDetail', {
+          id: Number(route.params.id)
+        })
+    )
+    const res = data.value as any
+    state.content = res?.data?.blog.content || ''
+    state.time = res?.data?.blog.updateTime || ''
+    state.title = res?.data?.blog.title || ''
+    state.list = (res?.data?.list as []) || []
   } catch (error) {
     console.error('Failed to fetch blog detail:', error)
   }
 }
-getDetail()
+await getDetail()
 </script>
 
 <style lang="less" scoped>
