@@ -35,12 +35,12 @@ const menus = ref<Record<string, string>[]>([
   // },
   {
     icon: 'icon-blog',
-    name: 'AI资讯',
+    name: '资讯',
     url: '/blog'
   },
   {
     icon: 'icon-data',
-    name: 'AI产品库',
+    name: '工具',
     url: '/product/aiproduct'
   },
   {
@@ -50,7 +50,7 @@ const menus = ref<Record<string, string>[]>([
   },
   {
     icon: 'icon-zhuanlan',
-    name: '专题',
+    name: '精选',
     url: '/specialColumn'
   },
   {
@@ -68,159 +68,81 @@ const menus = ref<Record<string, string>[]>([
 }
 
 .left-menu {
-  width: 220px;
-  flex-shrink: 0;
-  margin-right: 20px;
+  display: none; // 默认隐藏，大屏不显示
 }
 
 .left-menu-fixed {
-  padding: 24px 0;
+  display: flex;
   position: fixed;
-  top: 70px;
-  width: 220px;
+  bottom: 0;
+  top: auto;
+  width: 100%;
+  height: 60px;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--border-color);
+  z-index: 1000;
+  justify-content: space-around;
   
   .menu-item {
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    margin: 0;
+    border-radius: 0;
+    flex: 1;
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
-    height: 52px;
-    border-radius: 16px;
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--text-secondary);
-    transition: all 0.3s ease;
-    margin-bottom: 8px;
-    padding: 0 16px;
-    text-decoration: none;
     
     &:hover {
-      background: var(--bg-secondary);
+      background: transparent;
       color: var(--text-main);
-      transform: translateX(4px);
     }
     
     &.active {
-      background: var(--primary-bg-light);
       color: var(--primary-color);
       
       .icon-wrapper {
         color: var(--primary-color);
       }
     }
-
+    
     .icon-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 32px;
-      height: 32px;
-      margin-right: 12px;
-      border-radius: 8px;
-      transition: all 0.3s;
+      margin-right: 0;
+      margin-bottom: 2px;
+      width: auto;
+      height: auto;
       
       .iconfont {
-        font-size: 22px;
+        font-size: 20px;
+        color: inherit;
       }
     }
   }
 }
 
-// 响应式调整
-@media screen and (min-width: 1280px) and (max-width: 1400px) {
+// 大屏隐藏左侧菜单（已在默认样式中隐藏）
+@media screen and (min-width: 1024px) {
   .left-menu {
-    width: 180px;
-  }
-  .left-menu-fixed {
-    width: 180px;
-  }
-  .content-body {
-    max-width: calc(100% );
+    display: none !important;
   }
 }
 
-@media screen and (min-width: 1024px) and (max-width: 1279px) {
-  .left-menu {
-    width: 80px;
-    margin-right: 10px;
-  }
-  .left-menu-fixed {
-    width: 80px;
-    
-    .menu-item {
-      justify-content: center;
-      padding: 0;
-      
-      .name {
-        display: none;
-      }
-      
-      .icon-wrapper {
-        margin-right: 0;
-      }
-    }
-  }
-  .content-body {
-    max-width: calc(100% );
-  }
-}
-
-@media screen and (max-width: 1023px) {
-  .content-body {
-    max-width: 100% !important;
-  }
-  
-  .left-menu {
-    display: none; // 在移动端使用底部导航或抽屉，这里先隐藏左侧
-  }
-  
-  // 移动端底部导航样式
-  .left-menu-fixed {
-    display: flex;
-    position: fixed;
-    bottom: 0;
-    top: auto;
-    width: 100%;
-    height: 60px;
-    padding: 0;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-top: 1px solid var(--border-color);
-    z-index: 1000;
-    justify-content: space-around;
-    
-    .menu-item {
-      flex-direction: column;
-      justify-content: center;
-      height: 100%;
-      margin: 0;
-      border-radius: 0;
-      flex: 1;
-      font-size: 12px;
-      
-      &:hover {
-        background: transparent;
-        transform: none;
-      }
-      
-      .icon-wrapper {
-        margin-right: 0;
-        margin-bottom: 2px;
-        width: auto;
-        height: auto;
-        
-        .iconfont {
-          font-size: 20px;
-        }
-      }
-    }
-  }
-}
-
-// 适配移动端显示
+// 小屏显示底部导航
 @media screen and (max-width: 1023px) {
   .left-menu {
-    display: block; // 恢复显示以便显示底部导航
+    display: block;
     width: 0;
     margin: 0;
+  }
+  
+  .content-body {
+    max-width: 100% !important;
   }
 }
 </style>

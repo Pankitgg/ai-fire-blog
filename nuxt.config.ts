@@ -110,9 +110,9 @@ export default defineNuxtConfig({
   nitro: {
     devProxy: {
       '/api': {
-        target:'https://ai-nous.com',
+        // target: 'https://ai-nous.com',
         // target: 'http://60.205.182.150:29090',
-        // target: 'http://localhost:29090',
+        target: 'http://localhost:29090',
         changeOrigin: true,
         rewrite: (path: any) => path.replace(/^\/api/, '')
       }

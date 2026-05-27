@@ -32,9 +32,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
-import request from '@/utils/request'
-
 interface ToolItem {
   id: number
   name: string
@@ -46,9 +43,8 @@ interface ToolItem {
   users: number
 }
 
-const toolsList = ref<ToolItem[]>([])
+const toolsList = useState<ToolItem[]>('aiToolsList', () => [])
 
-// 模拟数据 - 实际项目中应从API获取
 const mockToolsData: ToolItem[] = [
   {
     id: 1,
@@ -113,16 +109,8 @@ const mockToolsData: ToolItem[] = [
 ]
 
 const fetchToolsData = async () => {
-  try {
-    // 实际项目中应使用API获取数据
-    // const { data } = await request.get('/ai-tools/list')
-    // toolsList.value = data
-    
-    // 使用模拟数据
-    toolsList.value = mockToolsData
-  } catch (error) {
-    console.error('Failed to fetch tools data:', error)
-  }
+  if (toolsList.value.length > 0) return
+  toolsList.value = mockToolsData
 }
 
 onMounted(() => {
@@ -141,20 +129,20 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  
+
   h2 {
     font-size: 24px;
     font-weight: 600;
     color: #21293c;
     margin: 0;
   }
-  
+
   .more-link {
     font-size: 14px;
     color: #31c48c;
     text-decoration: none;
     transition: color 0.3s;
-    
+
     &:hover {
       color: #20a878;
     }
@@ -176,7 +164,7 @@ onMounted(() => {
   padding: 20px;
   display: flex;
   flex-direction: column;
-  
+
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
@@ -193,7 +181,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   img {
     width: 40px;
     height: 40px;
@@ -254,7 +242,7 @@ onMounted(() => {
   font-size: 14px;
   text-decoration: none;
   transition: background 0.3s;
-  
+
   &:hover {
     background: #20a878;
   }

@@ -26,7 +26,7 @@
     </div>
 
     <div class="related-articles" v-if="state.list.length">
-      <h3 class="related-title">作者的其他文章</h3>
+      <h3 class="related-title">更多文章</h3>
       <div class="related-list">
         <ArticleItem
           v-for="(item, index) in state.list"
@@ -52,7 +52,7 @@ import dayjs from 'dayjs'
 const router = useRouter()
 const route = useRoute()
 const goback = () => {
-  router.push('/blog')
+  router.back()
 }
 const state = reactive({
   content: '',

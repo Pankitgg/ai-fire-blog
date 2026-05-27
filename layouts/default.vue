@@ -1,17 +1,17 @@
 <!--
  * @Author: Shaoli
  * @Date: 2023-01-08 22:35:28
- * @LastEditors: Shaoli
- * @LastEditTime: 2023-03-11 23:57:32
- * @Description: 请填写文件描述
+ * @LastEditors: AI Assistant
+ * @LastEditTime: 2025-07-01
+ * @Description: 默认布局
 -->
 <template>
   <NavBar class="normal" />
   <div class="content-containter">
     <LeftMenu />
     <NuxtPage class="content-body" />
-    <Footer />
   </div>
+  <Footer />
 </template>
 
 <script lang="ts" setup>
@@ -22,7 +22,6 @@ import Footer from '@/components/layout/Footer.vue'
 
 <style lang="less" scoped>
 .content-containter {
-  // max-width: 1366px;
   height: calc(100% - 60px);
   min-height: calc(100vh - 70px);
   margin: auto;

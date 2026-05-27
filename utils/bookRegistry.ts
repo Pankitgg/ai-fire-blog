@@ -24,8 +24,8 @@ export const recommendedBooks: Book[] = [
     id: 'hlm-t',
     title: '红楼梦',
     subtitle: '',
-    author: '曹雪芹',
-    coverImage: 'https://blog.ai-nous.com/images/books/2f683f9b86c0593f8aa92db63345bf42.webp',
+    author: '',
+    coverImage: 'https://blog.ai-nous.com/images/books/honglou01.png',
     description: '中国古代最著名的长篇小说，以其复杂的人物关系、深刻的社会问题和丰富的想象力而闻名。',
     route: '/book/books/hlm-t',
     themeColor: '#2c3e50'

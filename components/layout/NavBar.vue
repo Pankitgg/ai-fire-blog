@@ -17,6 +17,20 @@
         </div>
       </NuxtLink>
       
+      <!-- 顶部导航菜单（大屏显示） -->
+      <nav class="nav-menu-desktop">
+        <NuxtLink
+          v-for="item in menus"
+          :key="item.name"
+          class="nav-menu-item"
+          :to="item.url"
+          active-class="active"
+        >
+          <i :class="`iconfont ${item.icon}`"></i>
+          <span>{{ item.name }}</span>
+        </NuxtLink>
+      </nav>
+      
       <div class="nav-search-wrapper">
         <a-input
           v-model:value="searchVal"
@@ -39,7 +53,38 @@
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue'
 import request from '@/utils/request'
+
+// 导航菜单数据
+const menus = ref<Record<string, string>[]>([
+  {
+    icon: 'icon-blog',
+    name: '资讯',
+    url: '/blog'
+  },
+  {
+    icon: 'icon-data',
+    name: '工具',
+    url: '/product/aiproduct'
+  },
+  {
+    icon: 'icon-Book_duotone_line',
+    name: '图书',
+    url: '/book/book'
+  },
+  {
+    icon: 'icon-zhuanlan',
+    name: '精选',
+    url: '/specialColumn'
+  },
+  {
+    icon: 'icon-profile',
+    name: '关于',
+    url: '/profile'
+  }
+])
+
 const searchVal = ref<string>('')
 const router = useRouter()
 const jumpSearch = () => {
@@ -136,6 +181,10 @@ const headerSrc = computed(() => {
     }
   }
 
+  .nav-menu-desktop {
+    display: none;
+  }
+  
   .nav-search-wrapper {
     flex: 1;
     display: flex;
@@ -182,7 +231,64 @@ const headerSrc = computed(() => {
   }
 }
 
+// 大屏导航菜单样式（1024px以上显示）
+@media (min-width: 1024px) {
+  .nav-bar {
+    .nav-menu-desktop {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .nav-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        background: var(--bg-secondary);
+        color: var(--text-main);
+      }
+      
+      &.active {
+        background: var(--primary-bg-light);
+        color: var(--primary-color);
+        
+        .iconfont {
+          color: var(--primary-color);
+        }
+      }
+      
+      .iconfont {
+        font-size: 16px;
+        color: inherit;
+      }
+    }
+    
+    .nav-search-wrapper {
+      max-width: 400px;
+      margin-left: 20px;
+      margin-right: auto;
+    }
+  }
+}
+
 // 响应式调整
+@media (max-width: 1023px) {
+  .nav-bar {
+    .nav-menu-desktop {
+      display: none;
+    }
+  }
+}
+
 @media (max-width: 768px) {
   .nav-bar {
     .nav-content-box {

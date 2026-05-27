@@ -8,24 +8,26 @@
 <template>
   <div class="home-container">
     <!-- 页面标题 -->
-    <div class="page-header">
+    <!-- <div class="page-header">
       <h1>AI资讯与工具平台</h1>
       <p>探索最新的AI技术资讯和实用工具</p>
-    </div>
+    </div> -->
     
     <!-- AI资讯板块 -->
     <AiNews />
     
     <!-- 最新文章板块 -->
-    <div class="latest-articles-section">
+    <!-- <div class="latest-articles-section">
       <div class="section-header">
         <h2>最新文章</h2>
         <a href="/blog" class="more-link">查看更多</a>
       </div>
       <ArticleList />
-    </div>
+    </div> -->
     
     <!-- AI工具汇总板块 -->
+     <Aitab />
+     
     <AiTools />
   </div>
 </template>
@@ -35,11 +37,12 @@
 import ArticleList from '@/components/index/ArticleList.vue'
 import AiNews from '@/components/index/AiNews.vue'
 import AiTools from '@/components/index/AiTools.vue'
+import Aitab from '~/components/index/Aitab.vue';
 </script>
 
 <style lang="less" scoped>
 .home-container {
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
   padding: 20px;
 }

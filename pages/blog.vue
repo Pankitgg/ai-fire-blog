@@ -1,29 +1,29 @@
 <template>
   <div class="blog-container">
     <div class="blog-header">
-      <h1>技术专栏</h1>
-      <p>分享AI技术心得与开发经验</p>
+      <h1>资讯专栏</h1>
+      <p>分享最新资讯资讯与实践经验</p>
     </div>
 
     <BlogTypes
-      :type-list="state.typeList"
-      :active-type="state.cateId"
+      :type-list="blogState.typeList"
+      :active-type="blogState.cateId"
       @change-active-type="changeActiveType"
     />
     <div
-      v-infinite-scroll="load"
+      v-infinite-scroll="loadMore"
       :infinite-scroll-immediate="false"
       :infinite-scroll-distance="20"
       class="article-grid"
     >
       <ArticleItem
-        v-for="(item, index) in state.list"
+        v-for="(item, index) in blogState.list"
         :key="index"
         :item="item"
       />
     </div>
-    <el-empty v-if="!state.list.length" description="暂无数据" class="empty-state"></el-empty>
-    <div v-if="state.list.length > 0 && !state.hasMore" class="no-more">
+    <el-empty v-if="!blogState.list.length && !loading" description="暂无数据" class="empty-state"></el-empty>
+    <div v-if="blogState.list.length > 0 && !blogState.hasMore" class="no-more">
       - 到底啦 -
     </div>
   </div>
@@ -31,41 +31,72 @@
 
 <script setup lang="ts">
 import request from '@/utils/request'
-const getTypeList = async () => {
-  const { data }: any = await request.post('/blog/getCateList')
-  state.cateId = data ? data[0].id : null
-  state.typeList = data || []
-  load()
+
+interface BlogState {
+  hasMore: boolean
+  cateId: number | null
+  list: any[]
+  typeList: any[]
 }
 
-const changeActiveType = (v: number) => {
-  state.cateId = v
-  pageNum.value = 1
-  state.list = []
-  state.hasMore = true
-  load()
-}
-
-const state = reactive<Record<string, any>>({
+const blogState = useState<BlogState>('blogState', () => ({
   hasMore: true,
   cateId: null,
   list: [],
   typeList: []
-})
+}))
+
 const pageNum = ref<number>(1)
-const load = async () => {
-  if (state.cateId == null) return
-  if (!state.hasMore) return
-  const { data }: any = await request.post('/blog/getCateBlogList', {
-    pageNum: pageNum.value,
-    pageSize: 10,
-    cateId: state.cateId
-  })
-  pageNum.value++
-  state.hasMore = data?.hasMore as boolean
-  state.list = state.list.concat(data?.list || [])
+const loading = ref(false)
+
+const initCategory = async () => {
+  if (blogState.value.typeList.length > 0) {
+    if (!blogState.value.cateId && blogState.value.typeList.length > 0) {
+      blogState.value.cateId = blogState.value.typeList[0].id
+    }
+    return
+  }
+
+  const { data }: any = await request.post('/blog/getCateList')
+  blogState.value.typeList = data || []
+  if (data && data.length > 0) {
+    blogState.value.cateId = data[0].id
+  }
 }
-getTypeList()
+
+const changeActiveType = (v: number) => {
+  if (blogState.value.cateId === v) return
+  blogState.value.cateId = v
+  pageNum.value = 1
+  blogState.value.list = []
+  blogState.value.hasMore = true
+}
+
+const loadMore = async () => {
+  if (blogState.value.cateId == null) return
+  if (!blogState.value.hasMore || loading.value) return
+
+  loading.value = true
+  try {
+    const { data }: any = await request.post('/blog/getCateBlogList', {
+      pageNum: pageNum.value,
+      pageSize: 10,
+      cateId: blogState.value.cateId
+    })
+    pageNum.value++
+    blogState.value.hasMore = data?.hasMore ?? false
+    blogState.value.list = [...blogState.value.list, ...(data?.list || [])]
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(async () => {
+  await initCategory()
+  if (blogState.value.list.length === 0 && blogState.value.cateId !== null) {
+    await loadMore()
+  }
+})
 </script>
 
 <style scoped lang="less">
@@ -82,7 +113,7 @@ getTypeList()
   background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
   border-radius: var(--radius-xl);
   margin-bottom: 40px;
-  
+
   h1 {
     font-size: 36px;
     font-weight: 800;
@@ -91,7 +122,7 @@ getTypeList()
     -webkit-text-fill-color: transparent;
     margin-bottom: 16px;
   }
-  
+
   p {
     font-size: 18px;
     color: var(--text-secondary);
@@ -119,16 +150,16 @@ getTypeList()
 @media (max-width: 768px) {
   .blog-header {
     padding: 40px 20px;
-    
+
     h1 {
       font-size: 28px;
     }
-    
+
     p {
       font-size: 16px;
     }
   }
-  
+
   .article-grid {
     grid-template-columns: 1fr;
   }
